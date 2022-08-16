@@ -32,6 +32,7 @@ const firebaseConfig = {
     measurementId: "G-3YKB8ESGT5"
   };
 
+
 //const auth = firebase.auth();
 //const firestore = firebase.firestore();
 

@@ -1,0 +1,44 @@
+.topbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a237e;
+    padding: 8px;
+    height: 60px;
+    width: 100%;
+
+}
+
+.sender {
+    color: #c5cae9;
+    font-size: 24px;
+}
+.username {
+    padding: 8px;
+    max-width: 400px;
+}
+.messages{
+    display: flex;
+    flex-direction: column;
+    margin: 8px;
+
+}
+
+.blue {
+    display: flex;
+    align-self: flex-end;
+    background-color: #2196f3;
+    border-radius: 4px;
+
+}
+
+.green {
+    display: flex;
+    align-self: flex-start;
+    background-color: #64dd17;
+    border-radius: 4px;
+
+}
+
+

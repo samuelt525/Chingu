@@ -1,14 +1,9 @@
 import './App.css';
-import Sidebar from './components/Sidebar'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Messages from './pages/Messages';
 import SignIn from './pages/SignIn';
 import firebaseConfig from './firebase';
 import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
-
 
 function App() {
   const app = firebase.initializeApp(firebaseConfig);
@@ -16,19 +11,20 @@ function App() {
   onAuthStateChanged(auth, (user) => {
     console.log(user);
     if (user) {
-      localStorage.setItem('userSignedIn', '1')
+      sessionStorage.setItem('userSignedIn', '1')
     }
     else {
-      localStorage.removeItem('userSignedIn')
+      sessionStorage.removeItem('userSignedIn')
     }
   });
-  if (!localStorage.getItem('userSignedIn') == '1') {
+  if (sessionStorage.getItem('userSignedIn') != '1') {
     console.log('hello!?!"');
     return (
       <SignIn />
     )
   }
   else {
+    console.log("hi")
     return (
       mainPage()
     )
@@ -37,15 +33,9 @@ function App() {
 
 function mainPage() {
   return (
-    <>
-      <Router>
-        <Sidebar />
-        <Routes>
-          <Route path="/" />
-          <Route path="/Messages" component={Messages} />
-        </Routes>
-      </Router>
-    </>
+    <h1>
+      Hello
+    </h1>
   )
 }
 
