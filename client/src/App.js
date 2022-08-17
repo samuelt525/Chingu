@@ -1,9 +1,10 @@
 import './App.css';
-import SignIn from './pages/SignIn';
 import firebaseConfig from './firebase';
 import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+import SignIn from './pages/SignIn';
 
 function App() {
   const app = firebase.initializeApp(firebaseConfig);
@@ -18,7 +19,6 @@ function App() {
     }
   });
   if (sessionStorage.getItem('userSignedIn') != '1') {
-    console.log('hello!?!"');
     return (
       <SignIn />
     )

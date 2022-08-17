@@ -1,0 +1,10 @@
+p {
+    color:rgb(138, 138, 138);
+    text-align: center;
+}
+
+.signUpButton {
+    margin: 0 auto;
+    display: block;
+    text-align:center;
+}
