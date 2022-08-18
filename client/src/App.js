@@ -1,5 +1,5 @@
 import './App.css';
-import {firebaseConfig} from './firebase';
+import { firebaseConfig } from './firebase';
 import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { getFirestore, doc, getDoc, collection } from "firebase/firestore";
@@ -18,8 +18,10 @@ function App() {
     console.log(user);
     if (user) {
       sessionStorage.setItem('userSignedIn', '1');
-      uid = user.uid;
-      docExists('profile', uid);
+      if (sessionStorage.getItem('profileSetUp') != '1') {
+        uid = user.uid;
+        docExists('profile', uid);
+      }
     }
     else {
       sessionStorage.removeItem('userSignedIn')
@@ -28,7 +30,7 @@ function App() {
   if (sessionStorage.getItem('userSignedIn') != '1') {
     return (
       <SignIn />
-      
+
     )
   }
   else {
@@ -57,7 +59,8 @@ function mainPage() {
 async function docExists(docName, docId) {
   let docSnapshot = await getDoc(doc(db, docName, docId));
   console.log(docSnapshot._document);
-  if(docSnapshot._document == null) {
+  console.log(docSnapshot);
+  if (docSnapshot._document == null) {
     sessionStorage.setItem('profileSetUp', '0');
   }
 }

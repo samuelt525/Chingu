@@ -49,7 +49,8 @@ function SignUp() {
                 .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
-                    window.location.reload(false);
+                    sessionStorage.setItem('profileSetUp', '0');
+                    window.location.reload(true);
                     // ...
                 })
                 .catch((error) => {

@@ -64,8 +64,8 @@ function InitialProfileSetup() {
                 console.log("Error adding document: " + e);
             }
             finally {
-                sessionStorage.removeItem('profileSetUp')
-                window.location.reload(false);
+                sessionStorage.setItem('profileSetUp', '1');
+                window.location.reload(true);
             }
         }
     };

@@ -29,7 +29,7 @@ const SidebarData = [
     },
     {
         title: 'Friends',
-        path: '../Friends.js',
+        path: '../friends',
         icons: <FAIcons.FaUserFriends />,
     },
 
@@ -42,7 +42,7 @@ function NewSideBar() {
     return (
         <>
             <div className="sidebar">
-                <IconButton  onClick={showSidebar} size='large' edge='start' color='inherit' aria-label='logo' onClick={showSidebar}>
+                <IconButton  onClick={showSidebar} size='large' edge='start' color='inherit' aria-label='logo'>
                     <FAIcons.FaBars/>
                 </IconButton>
             </div>
