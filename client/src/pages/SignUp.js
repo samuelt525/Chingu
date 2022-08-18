@@ -29,6 +29,7 @@ function SignUp() {
     const defaultValues = {
         email: "",
         password: "",
+        passwordCheck: ""
     };
     const [formValues, setFormValues] = useState(defaultValues);
     const handleInputChange = (e) => {
@@ -40,19 +41,24 @@ function SignUp() {
     };
     const handleSubmit = (event) => {
         event.preventDefault();
-        createUserWithEmailAndPassword(auth, formValues.email, formValues.password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                window.location.reload(false);
-                // ...
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                setErrorMessage(errorMessage);
-                // ..
-            });
+        if (formValues.password != formValues.passwordCheck) {
+            setErrorMessage("Passwords do not match");
+        }
+        else {
+            createUserWithEmailAndPassword(auth, formValues.email, formValues.password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    window.location.reload(false);
+                    // ...
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    setErrorMessage(errorMessage);
+                    // ..
+                });
+        }
     };
     const [error, setError] = useState("");
     function setErrorMessage(errorMessage) {
@@ -66,7 +72,7 @@ function SignUp() {
                 <TextField
                     id="email-input"
                     name="email"
-                    label="Email"
+                    label="Enter Email"
                     type="text"
                     value={formValues.email}
                     onChange={handleInputChange}
@@ -74,9 +80,17 @@ function SignUp() {
                 <TextField
                     id="password-input"
                     name="password"
-                    label="Password"
+                    label="Enter Password"
                     type="password"
                     value={formValues.password}
+                    onChange={handleInputChange}
+                />
+                <TextField
+                    id="password-input-check"
+                    name="passwordCheck"
+                    label="Enter Password Again"
+                    type="password"
+                    value={formValues.passwordCheck}
                     onChange={handleInputChange}
                 />
                 <Button variant="contained" color="primary" type="submit">
