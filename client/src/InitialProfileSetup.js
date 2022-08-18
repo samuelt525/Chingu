@@ -14,6 +14,7 @@ import { TextField } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import App from './App';
 
 function InitialProfileSetup() {
     const app = firebase.initializeApp(firebaseConfig);
@@ -44,7 +45,7 @@ function InitialProfileSetup() {
             [name]: value,
         });
     };
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         if (formValues.name == "") {
             setErrorMessage("Please enter your name.");
@@ -54,18 +55,16 @@ function InitialProfileSetup() {
         }
         else {
             try {
-                const profileRef = setDoc(doc(db, 'profile', uid), {
+                await setDoc(doc(db, 'profile', uid), {
                     name: formValues.name,
                     birthday: formValues.birthday,
                     bio: formValues.bio
-                });
+                }, {merge: true});
+                sessionStorage.setItem('profileSetUp', '1');
+                window.location.reload(false);
             }
             catch (e) {
                 console.log("Error adding document: " + e);
-            }
-            finally {
-                sessionStorage.setItem('profileSetUp', '1');
-                window.location.reload(true);
             }
         }
     };
