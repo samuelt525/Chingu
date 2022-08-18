@@ -2,20 +2,23 @@ import React, { useState } from 'react'
 import '../styles/ChatList.css'
 import { Avatar, Button } from '@mui/material'
 
-
-export function Chat() {
-    
-    return (
-        <button className="chat" >
-            <Avatar></Avatar>
-            <p className='chatText'> Samuel Tsui</p>
-        </button>
-    )
-}
-
 export function ChatList() {
 
-    const [checked, setChecked] = useState(false);
+    const [selectedUser, setSelectedUser] = useState("");
+
+    function ChatBox() {
+    
+        return (
+            <button className="chat" onClick={(e) => {
+                setSelectedUser(e.target.children[1].innerHTML)
+                console.log(selectedUser)
+            }} >
+                <Avatar></Avatar>
+                <p className='chatText'> Samuel Tsui</p>
+            </button>
+        )
+    }
+    
 
     return (
 
@@ -38,12 +41,7 @@ export function ChatList() {
             </div>
             <div className="friendsListBodyContainer">
                 <div className="friendsBlock">
-                    <Chat />
-                    <Chat />
-                    <Chat />
-                    <Chat />
-                    <Chat />
-                    <Chat />
+                    <ChatBox />
                 </div>
             </div>
         </div>

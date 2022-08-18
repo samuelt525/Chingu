@@ -7,7 +7,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import './SignIn.css';
 
 import 'firebase/auth';
-import firebaseConfig from '../firebase';
+import {firebaseConfig} from '../firebase';
 import { getAuth, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 import firebase from 'firebase/compat/app';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
@@ -45,7 +45,7 @@ function SignIn() {
             <>
                 <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
                 <br></br>
-                <p>————— Don't have an account? —————</p>
+                <p className='text'>————— Don't have an account? —————</p>
                 <br></br>
                 <div className="signUpButton">
                     <Button variant="outlined" startIcon={<MailIcon />} onClick={renderHtml}>Sign up with email</Button>

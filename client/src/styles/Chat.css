@@ -10,19 +10,19 @@
 
 }
 
-.sender {
+.ToUserName {
     color: #c5cae9;
     font-size: 24px;
 }
-.username {
+.message {
     padding: 8px;
     max-width: 400px;
+    margin: 4px 0px;
 }
 .messages{
     display: flex;
     flex-direction: column;
     margin: 8px;
-
 }
 
 .blue {
@@ -40,5 +40,4 @@
     border-radius: 4px;
 
 }
-
 
