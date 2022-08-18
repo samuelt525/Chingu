@@ -1,5 +1,5 @@
 import './App.css';
-import firebaseConfig from './firebase';
+import {firebaseConfig} from './firebase';
 import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -21,6 +21,7 @@ function App() {
   if (sessionStorage.getItem('userSignedIn') != '1') {
     return (
       <SignIn />
+      
     )
   }
   else {

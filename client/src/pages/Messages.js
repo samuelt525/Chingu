@@ -1,10 +1,14 @@
 import { Avatar, TextField } from '@mui/material';
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ChatList from '../components/ChatList';
 import TabScrollButton from '@mui/material/TabScrollButton';
+import { db, auth } from '../firebase.js'
 
 import '../styles/Messages.css'
 import '../styles/Chat.css'
+import { collection, query, addDoc, serverTimestamp, onSnapshot, doc, limit, orderBy } from 'firebase/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { SAMLAuthProvider } from 'firebase/auth';
 
 function Topbar() {
 
@@ -13,64 +17,63 @@ function Topbar() {
             <Avatar>
                 {/* Profile Pic */}
             </Avatar>
-            <p className='sender'>
+            <p className='ToUserName'>
                 {/* Active user */}
                 Sean Rhee
             </p>
         </div>
     )
 }
-
-const tempData = [
-
-    {
-        message: "Hello Sean this is a test to see if shit is workingHello Sean this is a test to see if shit is workingHello Sean this is a test to see if shit is workingHello Sean this is a test to see if shit is workingHello Sean this is a test to see if shit is workings",
-        fromUser: "Samuel",
-        toUser: "Sean"
-    },
-    {
-        message: "Hi Sam this ia test to see if this shit is workingHi Sam this ia test to see if this shit is workingHi Sam this ia test to see if this shit is workingHi Sam this ia test to see if this shit is workingHi Sam this ia test to see if this shit is working",
-        fromUser: "Sean",
-        toUser: "Samuel"
-    },
-    {
-        message: "Hello Sean",
-        fromUser: "Samuel",
-        toUser: "Sean"
-    },
-    {
-        message: "Hi Sam",
-        fromUser: "Sean",
-        toUser: "Samuel"
-    },
-    {
-        message: "Hello Sean",
-        fromUser: "Samuel",
-        toUser: "Sean"
-    },
-    {
-        message: "Hi Sam",
-        fromUser: "Sean",
-        toUser: "Samuel"
-    },
-]
-
 const user = "Samuel"
 
-function getMessage() {
-    
-    return tempData.map(msg => {
-        const sender = msg.fromUser === user;
-        return (
-            <div className={sender ? 'blue username' : 'green username'}>
-                <p>{msg.message}</p>
-            </div>
-        )
-
-    })
-}
-
 function Messages() {
+
+    const q = collection(db, `chats`)
+
+    const FromUser = "Samuel";
+    const ToUser = "Sean";
+    const [currentMessage, setCurrentMessage] = useState("");
+    const [messages, setMessages] = useState([]);
+    const bottomOfChat = useRef()
+    console.log(bottomOfChat)
+
+    useEffect(() => {
+        const temp = query(collection(db, 'test'), orderBy("created"), limit(60))
+        const snap = onSnapshot(temp, (message) => {
+            setMessages(message.docs.map(doc => doc.data()))
+        })
+
+    }, [])
+    useEffect(() => {
+        setTimeout(
+            bottomOfChat.current.scrollIntoView({
+                behavior: "smooth",
+                block: 'start',
+            }), 100
+        )
+    },[messages])
+
+    function getMessage() {
+        console.log("How many times it work")
+        return messages.map(msg => {
+            const sender = msg.fromUser === user;
+            return (
+                <div className={sender ? 'blue message' : 'green message'}>
+                    <p className='black'>{msg.messages}</p>
+                </div>
+            )
+        })
+
+    }
+    function SendMessage(text) {
+        const testRef = collection(db, 'test')
+        return addDoc(testRef, {
+            created: serverTimestamp(),
+            messages:  text,
+            fromUser: FromUser,
+            toUser: ToUser,
+        });
+    }
 
     return (
         <>
@@ -81,12 +84,23 @@ function Messages() {
                     <div className='messages'>
                         {getMessage()}
                     </div>
-                    <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+                    <TextField 
+                    id="outlined-basic" 
+                    label="Outlined" 
+                    variant="outlined"
+                    value={currentMessage}
+                    onKeyPress={(e) => {
+                        if (e.key === "Enter"){
+                            SendMessage(e.target.value)
+                            setCurrentMessage("")
+                        }else{
+                            setCurrentMessage(e.value)
+                        }
+                    }}
+                    />
+                    <div ref={bottomOfChat} />
                 </div>
             </div>
-
-
-
         </>
     )
 }
