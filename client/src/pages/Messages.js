@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import ChatList from '../components/ChatList';
 import TabScrollButton from '@mui/material/TabScrollButton';
 import { db, auth } from '../firebase.js'
+import NewSideBar from '../components/NewSideBar'
+
 
 import '../styles/Messages.css'
 import '../styles/Chat.css'
@@ -77,6 +79,7 @@ function Messages() {
 
     return (
         <>
+            <NewSideBar />
             <div className='container'>
                 <ChatList />
                 <div className='chatContainer'>

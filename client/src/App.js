@@ -4,9 +4,9 @@ import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { getFirestore, doc, getDoc, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 import SignIn from './pages/SignIn';
 import InitialProfileSetup from './InitialProfileSetup';
+import NewSideBar from './components/NewSideBar';
 
 const app = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -50,9 +50,10 @@ function App() {
 
 function mainPage() {
   return (
-    <h1>
-      Hello
-    </h1>
+    <>
+      <NewSideBar />
+      <h1> Home </h1>
+    </>
   )
 }
 

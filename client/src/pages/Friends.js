@@ -1,11 +1,12 @@
 import NewSideBar from '../components/NewSideBar'
 
-export default function Profile(){
+export default function Friends(){
     return (
         <>
             <NewSideBar />
-            <h1> Profile</h1>
+            <h1>Friends</h1>
         </>
+
 
     )
 

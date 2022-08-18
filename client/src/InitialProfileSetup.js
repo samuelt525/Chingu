@@ -58,7 +58,9 @@ function InitialProfileSetup() {
                 await setDoc(doc(db, 'profile', uid), {
                     name: formValues.name,
                     birthday: formValues.birthday,
-                    bio: formValues.bio
+                    bio: formValues.bio,
+                    userID: uid,
+                    friends: []
                 }, {merge: true});
                 sessionStorage.setItem('profileSetUp', '1');
                 window.location.reload(false);

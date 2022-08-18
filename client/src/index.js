@@ -5,19 +5,18 @@ import './index.css';
 import App from './App';
 import Messages from './pages/Messages'
 import Profile from './pages/Profile'
+import Friends from './pages/Friends';
 
 import reportWebVitals from './reportWebVitals';
 
-import NewSidebar from './components/NewSideBar';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-  <NewSidebar />
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="messages" element={<Messages />} />
       <Route path="profile" element={<Profile />} />
-
+      <Route path="friends" element={<Friends />} />
     </Routes>
   </BrowserRouter>
 );
