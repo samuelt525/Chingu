@@ -4,7 +4,7 @@ import {
     Button
 } from '@mui/material';
 
-import firebaseConfig from './firebase';
+import {firebaseConfig} from './firebase';
 import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { getFirestore, setDoc, doc } from "firebase/firestore";
