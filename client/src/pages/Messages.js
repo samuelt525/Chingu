@@ -5,7 +5,6 @@ import TabScrollButton from '@mui/material/TabScrollButton';
 import { db, auth } from '../firebase.js'
 import NewSideBar from '../components/NewSideBar'
 
-
 import '../styles/Messages.css'
 import '../styles/Chat.css'
 import { collection, query, addDoc, serverTimestamp, onSnapshot, doc, limit, orderBy } from 'firebase/firestore';
@@ -28,7 +27,7 @@ function Topbar() {
 }
 const user = "Samuel"
 
-function Messages() {
+function Messages(props) {
 
     const q = collection(db, `chats`)
 
@@ -37,12 +36,11 @@ function Messages() {
     const [currentMessage, setCurrentMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const bottomOfChat = useRef()
-    console.log(bottomOfChat)
 
     useEffect(() => {
-        const temp = query(collection(db, 'test'), orderBy("created"), limit(60))
+        const temp = query(collection(db, 'test'), orderBy("created", "desc"), limit(15))
         const snap = onSnapshot(temp, (message) => {
-            setMessages(message.docs.map(doc => doc.data()))
+            setMessages(message.docs.map(doc => doc.data()).reverse())
         })
 
     }, [])
@@ -56,7 +54,6 @@ function Messages() {
     },[messages])
 
     function getMessage() {
-        console.log("How many times it work")
         return messages.map(msg => {
             const sender = msg.fromUser === user;
             return (
@@ -81,7 +78,7 @@ function Messages() {
         <>
             <NewSideBar />
             <div className='container'>
-                <ChatList />
+                <ChatList userData={props.userData}/>
                 <div className='chatContainer'>
                     <Topbar />
                     <div className='messages'>

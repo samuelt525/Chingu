@@ -11,14 +11,7 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />} />
-      <Route path="messages" element={<Messages />} />
-      <Route path="profile" element={<Profile />} />
-      <Route path="friends" element={<Friends />} />
-    </Routes>
-  </BrowserRouter>
+  <App />
 );
 
 // If you want to start measuring performance in your app, pass a function
