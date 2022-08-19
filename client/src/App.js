@@ -20,8 +20,6 @@ const auth = getAuth(app);
 
 function App() {
   const [uid, setUID] = useState("")
-  const [userData, SetUserData] = useState(null)
-
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUID(user.uid)
@@ -34,13 +32,6 @@ function App() {
       sessionStorage.removeItem('userSignedIn')
     }
   });
-
-  useEffect(() => {
-    getProfile(uid).then(data => {
-      SetUserData(data)
-    })
-  }, [uid]);
-
 
   if (sessionStorage.getItem('userSignedIn') != '1') {
     return (
@@ -56,19 +47,19 @@ function App() {
     else {
 
       return (
-        mainPage(userData, uid)
+        mainPage(uid)
       )
     }
   }
 }
 
-function mainPage(userData, uid) {
+function mainPage(uid) {
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="messages" element={<Messages userData={userData} />} />
+          <Route path="messages" element={<Messages uid={uid} />} />
           <Route path="profile" element={<Profile />} />
           <Route path="friends" element={<Friends />} />
         </Routes>
@@ -83,10 +74,6 @@ async function docExists(docName, docId) {
     sessionStorage.setItem('profileSetUp', '0');
   }
 }
-async function getProfile(uid){
-  const docSnap = await getDoc(doc(db, "profile", uid))
-  return docSnap.data();
 
-}
 
 export default App;

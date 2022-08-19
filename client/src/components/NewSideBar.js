@@ -47,10 +47,10 @@ function NewSideBar() {
                 </IconButton>
             </div>
             <Drawer open={sidebar} onClose={showSidebar} anchor="left">
-                <List className='list'>
+                <div className='list'>
                     {SidebarData.map((item, index) => {
                         return (
-                            <li key={index} className='nav-text'>
+                            <li key={item.title.toString()} className='nav-text'>
                                 <Link to={item.path}>
                                     {item.icons}
                                     <span>{item.title}</span>
@@ -58,7 +58,7 @@ function NewSideBar() {
                             </li>
                         );
                     })}
-                </List>
+                </div>
             </Drawer>
         </>
     );

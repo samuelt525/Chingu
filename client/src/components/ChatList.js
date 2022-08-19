@@ -5,6 +5,8 @@ import { getFirestore, doc, getDoc, collection, setDoc, addDoc } from "firebase/
 import { db, auth } from '../firebase.js'
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { letterSpacing } from '@mui/system';
+import { AiOutlineConsoleSql } from 'react-icons/ai';
+import { map } from '@firebase/util';
 
 const style = {
     position: 'absolute',
@@ -19,88 +21,84 @@ const style = {
 };
 
 export function ChatList(props) {
-
     const [selectedUser, setSelectedUser] = useState("");
-    const [friendsList, setFriendsList] = useState([]);
-
-    const [snapshot, loading, error] = useCollection(collection(db, "chats"))
-
+    const [activeUser, setActiveUser] = useState("");
+    const [snapshot] = useCollection(collection(db, "chats"))
     const chats = snapshot?.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
     }))
 
-    const chatExists = userID => chats?.find(chat => (chat.users.includes(props.userData.userID) && chat.users.includes(userID)))
     const [profileSnapshot] = useCollection(collection(db, "profile"))
-    
+    const profiles = profileSnapshot?.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }))
 
-    useEffect(() => {
-        const fetchData = async () => {
-            props.userData.friends.map(async data => {
-                const docSnap = await getDoc(doc(db, "profile", data))
-                setFriendsList(friendsList => [...friendsList, docSnap.data()])
-            })
-        };
-        fetchData();
-    }, []);
+    const chatExists = userID => chats?.find(chat => (chat.users.includes(props.uid) && chat.users.includes(userID)))
+    const getProfile = userID => profiles?.find(profile => (profile.userID == userID))
 
+    //push data to db
     useEffect(() => {
         const fetchData = async () => {
             const chatsRef = await collection(db, "chats")
             await addDoc(chatsRef, {
-                users: [props.userData.userID, selectedUser],
+                users: [props.uid, selectedUser],
                 messages: [],
             });
         }
-        if (selectedUser != "")
+        if (selectedUser != "" && activeUser != "")
             fetchData()
     }, [selectedUser])
 
     function ChatBox() {
-        return chats?.filter(chat => chat.users.includes(props.userData.userID)).map(chat => {
-            let friend = chat.users.filter(user => user != props.userData.userID)
-            console.log(friendsList.filter(friends => friends.userID == friend ))
-            return (
-                <Box>
-                    <button className="chat" onClick={(e) => {
-                        setSelectedUser(friend.userID)
-                    }} >
-                        <Avatar></Avatar>
-                        <p className='chatText' id={friend.userID}> {friend.name} </p>
-                    </button>
-                </Box>
-            )
-        })    
-    }
-
-    function NewChatBox() {
-        return friendsList.map((friend) => {
-            if (!chatExists(friend.userID))
+        if (profileSnapshot != null)
+            return (chats?.filter(chat => chat.users.includes(props.uid)).map(chat => {
+                let friend = chat.users.filter(user => user != props.uid)
+                let profile = getProfile(friend)
                 return (
                     <Box>
                         <button className="chat" onClick={(e) => {
-                            setSelectedUser(friend.userID)
+                            setActiveUser(profile?.userID)
                         }} >
                             <Avatar></Avatar>
-                            <p className='chatText' id={friend.userID}> {friend.name} </p>
+                            <p className='chatText' id={profile?.userID}> {profile?.name} </p>
+                        </button>
+                    </Box>
+                )
+            }))
+    }
+    function NewChatBox() {
+        let UserProfile = getProfile(props.uid)
+        return UserProfile?.friends.map((friend) => {
+            console.log(friend)
+            let profile = getProfile(friend)
+            if (!chatExists(profile.userID))
+                return (
+                    <Box>
+                        <button className="chat" onClick={(e) => {
+                            setSelectedUser(profile.userID)
+                        }} >
+                            <Avatar></Avatar>
+                            <p className='chatText' id={profile.userID}> {profile.name} </p>
                         </button>
                     </Box>
                 )
         })
     }
 
+    //modal stuff
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
 
     return (
-
         <div className='friendsListContainer' >
             <div className='friendsListHeader'>
                 {/* Code to Grab User Profile Account*/}
                 <Avatar></Avatar>
-                <p style={{ fontSize: "24px" }}> Samuel Tsui</p>
+                <p style={{ fontSize: "24px" }}> { } </p>
             </div>
             <div className="newChatButtonContainer" >
                 <Button variant="outlined" style={{
@@ -123,12 +121,14 @@ export function ChatList(props) {
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         Select a friend
                     </Typography>
-                    {NewChatBox()}
+                    <NewChatBox uid={props.uid}/>
                 </Box>
             </Modal>
             <div className="friendsListBodyContainer">
                 <div className="friendsBlock">
-                    {ChatBox()}
+                    {
+                        ChatBox()
+                    }
                 </div>
             </div>
         </div>

@@ -11,20 +11,7 @@ import { collection, query, addDoc, serverTimestamp, onSnapshot, doc, limit, ord
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { SAMLAuthProvider } from 'firebase/auth';
 
-function Topbar() {
 
-    return (
-        <div className='topbar'>
-            <Avatar>
-                {/* Profile Pic */}
-            </Avatar>
-            <p className='ToUserName'>
-                {/* Active user */}
-                Sean Rhee
-            </p>
-        </div>
-    )
-}
 const user = "Samuel"
 
 function Messages(props) {
@@ -78,7 +65,7 @@ function Messages(props) {
         <>
             <NewSideBar />
             <div className='container'>
-                <ChatList userData={props.userData}/>
+                <ChatList uid={props.uid}/>
                 <div className='chatContainer'>
                     <Topbar />
                     <div className='messages'>
@@ -104,5 +91,18 @@ function Messages(props) {
         </>
     )
 }
+function Topbar() {
 
+    return (
+        <div className='topbar'>
+            <Avatar>
+                {/* Profile Pic */}
+            </Avatar>
+            <p className='ToUserName'>
+                {/* Active user */}
+                
+            </p>
+        </div>
+    )
+}
 export default Messages
