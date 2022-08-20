@@ -86,18 +86,18 @@ export function ChatList(props) {
                 )
         })
     }
-
+    const chatid = chats?.find(chat => (chat.users.includes(props.uid) && chat.users.includes(activeUser)))?.id
     useEffect(() => {
-        const temp = collection(db, 'chats')
-        console.log(temp)
-        const snap = onSnapshot(temp, (message) => {
-            setMessages(message.docs.map(doc => doc.data()).reverse())
+        const chatdb = query(collection(db, `chats/${chatid}/message`), orderBy("created", "desc"), limit(15))
+        const snap = onSnapshot(chatdb, (message) => {
+                console.log(message)
+                setMessages(message.docs.map(doc => doc.data()).reverse())
         })
-
+        console.log(activeUser)
     }, [activeUser])
     function getMessage() {
         return messages.map(msg => {
-            const sender = msg.fromUser === user;
+            const sender = msg.fromUser === props.uid;
             return (
                 <div className={sender ? 'blue message' : 'green message'}>
                     <p className='black'>{msg.messages}</p>
@@ -107,16 +107,14 @@ export function ChatList(props) {
 
     }
     function SendMessage(text) {
-        const testRef = collection(db, 'test')
+        const testRef = collection(db, `chats/${chatid}/message`)
         return addDoc(testRef, {
             created: serverTimestamp(),
             messages: text,
-            fromUser: FromUser,
-            toUser: ToUser,
+            fromUser: props.uid,
+            toUser: activeUser,
         });
     }
-    const FromUser = "Samuel";
-    const ToUser = "Sean";
     const [currentMessage, setCurrentMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState([]);
