@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import '../styles/ChatList.css'
-import { Avatar, Button, Modal, Box, Typography, getCardHeaderUtilityClass } from '@mui/material'
-import { getFirestore, doc, getDoc, collection, setDoc, addDoc } from "firebase/firestore";
+import '../styles/Messages.css'
+import '../styles/Chat.css'
+import { Avatar, Button, Modal, Box, Typography, TextField, getCardHeaderUtilityClass } from '@mui/material'
+import { getFirestore, doc, getDoc, collection, setDoc, serverTimestamp, query, orderBy, limit, onSnapshot, addDoc } from "firebase/firestore";
 import { db, auth } from '../firebase.js'
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { letterSpacing } from '@mui/system';
-import { AiOutlineConsoleSql } from 'react-icons/ai';
-import { map } from '@firebase/util';
-
+import TopBar from './TopBar'
 const style = {
     position: 'absolute',
     top: '50%',
@@ -21,7 +20,7 @@ const style = {
 };
 
 export function ChatList(props) {
-    const [selectedUser, setSelectedUser] = useState("");
+    const [createChatUser, setCreateChatUser] = useState("");
     const [activeUser, setActiveUser] = useState("");
     const [snapshot] = useCollection(collection(db, "chats"))
     const chats = snapshot?.docs.map(doc => ({
@@ -41,15 +40,16 @@ export function ChatList(props) {
     //push data to db
     useEffect(() => {
         const fetchData = async () => {
+            console.log("did this get called")
             const chatsRef = await collection(db, "chats")
             await addDoc(chatsRef, {
-                users: [props.uid, selectedUser],
+                users: [props.uid, createChatUser],
                 messages: [],
             });
         }
-        if (selectedUser != "" && activeUser != "")
+        if (createChatUser != "" )
             fetchData()
-    }, [selectedUser])
+    }, [createChatUser])
 
     function ChatBox() {
         if (profileSnapshot != null)
@@ -71,13 +71,13 @@ export function ChatList(props) {
     function NewChatBox() {
         let UserProfile = getProfile(props.uid)
         return UserProfile?.friends.map((friend) => {
-            console.log(friend)
             let profile = getProfile(friend)
             if (!chatExists(profile.userID))
                 return (
                     <Box>
                         <button className="chat" onClick={(e) => {
-                            setSelectedUser(profile.userID)
+                            setCreateChatUser(profile.userID)
+                            console.log("Jello")
                         }} >
                             <Avatar></Avatar>
                             <p className='chatText' id={profile.userID}> {profile.name} </p>
@@ -87,6 +87,54 @@ export function ChatList(props) {
         })
     }
 
+    useEffect(() => {
+        const temp = collection(db, 'chats')
+        console.log(temp)
+        const snap = onSnapshot(temp, (message) => {
+            setMessages(message.docs.map(doc => doc.data()).reverse())
+        })
+
+    }, [activeUser])
+    function getMessage() {
+        return messages.map(msg => {
+            const sender = msg.fromUser === user;
+            return (
+                <div className={sender ? 'blue message' : 'green message'}>
+                    <p className='black'>{msg.messages}</p>
+                </div>
+            )
+        })
+
+    }
+    function SendMessage(text) {
+        const testRef = collection(db, 'test')
+        return addDoc(testRef, {
+            created: serverTimestamp(),
+            messages: text,
+            fromUser: FromUser,
+            toUser: ToUser,
+        });
+    }
+    const FromUser = "Samuel";
+    const ToUser = "Sean";
+    const [currentMessage, setCurrentMessage] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [user, setUser] = useState([]);
+    const bottomOfChat = useRef()
+
+
+
+    useEffect(() => {
+        setTimeout(
+            bottomOfChat.current.scrollIntoView({
+                behavior: "smooth",
+                block: 'start',
+            }), 100
+        )
+    }, [messages])
+
+
+
     //modal stuff
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -94,43 +142,64 @@ export function ChatList(props) {
 
 
     return (
-        <div className='friendsListContainer' >
-            <div className='friendsListHeader'>
-                {/* Code to Grab User Profile Account*/}
-                <Avatar></Avatar>
-                <p style={{ fontSize: "24px" }}> { } </p>
-            </div>
-            <div className="newChatButtonContainer" >
-                <Button variant="outlined" style={{
-                    maxWidth: '120px',
-                    maxHeight: '40px',
-                    minWidth: '30px',
-                    minHeight: '30px',
-                    color: 'black',
-                    borderColor: 'black',
-                    margin: '8px',
-                }} onClick={handleOpen}>New Chat</Button>
-            </div>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Select a friend
-                    </Typography>
-                    <NewChatBox uid={props.uid}/>
-                </Box>
-            </Modal>
-            <div className="friendsListBodyContainer">
-                <div className="friendsBlock">
-                    {
-                        ChatBox()
-                    }
+        <div className='container'>
+            <div className='friendsListContainer' >
+                <div className='friendsListHeader'>
+                    {/* Code to Grab User Profile Account*/}
+                    <Avatar></Avatar>
+                    <p style={{ fontSize: "24px" }}> { } </p>
+                </div>
+                <div className="newChatButtonContainer" >
+                    <Button variant="outlined" style={{
+                        maxWidth: '120px',
+                        maxHeight: '40px',
+                        minWidth: '30px',
+                        minHeight: '30px',
+                        color: 'black',
+                        borderColor: 'black',
+                        margin: '8px',
+                    }} onClick={handleOpen}>New Chat</Button>
+                </div>
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Select a friend
+                        </Typography>
+                        <NewChatBox uid={props.uid} />
+                    </Box>
+                </Modal>
+                <div className="friendsListBodyContainer">
+                    <div className="friendsBlock">
+                        {ChatBox()}
+                    </div>
                 </div>
             </div>
+            <div className='chatContainer'>
+                    <TopBar />
+                    <div className='messages'>
+                        {getMessage()}
+                    </div>
+                    <TextField
+                        id="outlined-basic"
+                        label="Outlined"
+                        variant="outlined"
+                        value={currentMessage}
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                SendMessage(e.target.value)
+                                setCurrentMessage("")
+                            } else {
+                                setCurrentMessage(e.value)
+                            }
+                        }}
+                    />
+                    <div ref={bottomOfChat} />
+                </div>
         </div>
     )
 }
