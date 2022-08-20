@@ -3,7 +3,7 @@ import '../styles/ChatList.css'
 import '../styles/Messages.css'
 import '../styles/Chat.css'
 import { Avatar, Button, Modal, Box, Typography, TextField, getCardHeaderUtilityClass } from '@mui/material'
-import { getFirestore, doc, getDoc, collection, setDoc, serverTimestamp, query, orderBy, limit, onSnapshot, addDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, collection, setDoc, serverTimestamp, query, orderBy, limit, onSnapshot, addDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from '../firebase.js'
 import { useCollection } from 'react-firebase-hooks/firestore';
 import TopBar from './TopBar'
@@ -28,6 +28,7 @@ export function ChatList(props) {
         ...doc.data()
     }))
 
+
     const [profileSnapshot] = useCollection(collection(db, "profile"))
     const profiles = profileSnapshot?.docs.map(doc => ({
         id: doc.id,
@@ -44,29 +45,28 @@ export function ChatList(props) {
             const chatsRef = await collection(db, "chats")
             await addDoc(chatsRef, {
                 users: [props.uid, createChatUser],
-                messages: [],
+                lastModified: serverTimestamp(),
             });
         }
-        if (createChatUser != "" )
+        if (createChatUser != "")
             fetchData()
     }, [createChatUser])
 
     function ChatBox() {
-        if (profileSnapshot != null)
-            return (chats?.filter(chat => chat.users.includes(props.uid)).map(chat => {
-                let friend = chat.users.filter(user => user != props.uid)
-                let profile = getProfile(friend)
-                return (
-                    <Box>
-                        <button className="chat" onClick={(e) => {
-                            setActiveUser(profile?.userID)
-                        }} >
-                            <Avatar></Avatar>
-                            <p className='chatText' id={profile?.userID}> {profile?.name} </p>
-                        </button>
-                    </Box>
-                )
-            }))
+        return (chats?.filter(chat => chat.users.includes(props.uid)).map(chat => {
+            let friend = chat.users.filter(user => user != props.uid)
+            let profile = getProfile(friend)
+            return (
+                <Box>
+                    <button className={activeUser == profile?.userID ? "active chat" : "chat"} onClick={(e) => {
+                        setActiveUser(profile?.userID)
+                    }} >
+                        <Avatar></Avatar>
+                        <p className='chatText' id={profile?.userID}> {profile?.name} </p>
+                    </button>
+                </Box>
+            )
+        }))
     }
     function NewChatBox() {
         let UserProfile = getProfile(props.uid)
@@ -90,8 +90,8 @@ export function ChatList(props) {
     useEffect(() => {
         const chatdb = query(collection(db, `chats/${chatid}/message`), orderBy("created", "desc"), limit(15))
         const snap = onSnapshot(chatdb, (message) => {
-                console.log(message)
-                setMessages(message.docs.map(doc => doc.data()).reverse())
+            console.log(message)
+            setMessages(message.docs.map(doc => doc.data()).reverse())
         })
         console.log(activeUser)
     }, [activeUser])
@@ -107,8 +107,9 @@ export function ChatList(props) {
 
     }
     function SendMessage(text) {
-        const testRef = collection(db, `chats/${chatid}/message`)
-        return addDoc(testRef, {
+        const messageDb = collection(db, `chats/${chatid}/message`)
+
+        return addDoc(messageDb, {
             created: serverTimestamp(),
             messages: text,
             fromUser: props.uid,
@@ -143,9 +144,8 @@ export function ChatList(props) {
         <div className='container'>
             <div className='friendsListContainer' >
                 <div className='friendsListHeader'>
-                    {/* Code to Grab User Profile Account*/}
                     <Avatar></Avatar>
-                    <p style={{ fontSize: "24px" }}> { } </p>
+                    <p style={{ fontSize: "24px" }}> {getProfile(props.uid)?.name} </p>
                 </div>
                 <div className="newChatButtonContainer" >
                     <Button variant="outlined" style={{
@@ -178,26 +178,26 @@ export function ChatList(props) {
                 </div>
             </div>
             <div className='chatContainer'>
-                    <TopBar />
-                    <div className='messages'>
-                        {getMessage()}
-                    </div>
-                    <TextField
-                        id="outlined-basic"
-                        label="Outlined"
-                        variant="outlined"
-                        value={currentMessage}
-                        onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                                SendMessage(e.target.value)
-                                setCurrentMessage("")
-                            } else {
-                                setCurrentMessage(e.value)
-                            }
-                        }}
-                    />
-                    <div ref={bottomOfChat} />
+                <TopBar name={getProfile(activeUser)?.name} />
+                <div className='messages'>
+                    {getMessage()}
                 </div>
+                <TextField
+                    id="outlined-basic"
+                    label="Outlined"
+                    variant="outlined"
+                    value={currentMessage}
+                    onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                            SendMessage(e.target.value)
+                            setCurrentMessage("")
+                        } else {
+                            setCurrentMessage(e.value)
+                        }
+                    }}
+                />
+                <div ref={bottomOfChat} />
+            </div>
         </div>
     )
 }
