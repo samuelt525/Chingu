@@ -60,7 +60,7 @@ function mainPage(uid) {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="messages" element={<Messages uid={uid} />} />
-          <Route path="profile" element={<Profile />} />
+          <Route path="profile" element={<Profile uid={uid}/>} />
           <Route path="friends" element={<Friends />} />
         </Routes>
       </BrowserRouter>
