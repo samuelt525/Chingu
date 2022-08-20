@@ -8,22 +8,13 @@ import 'firebase/auth';
 import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword } from "firebase/auth";
 import firebase from 'firebase/compat/app';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-
 import { TextField } from '@mui/material';
+import '../styles/SignUp.css'
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import SignIn from './SignIn.js'
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
-
-// const uiConfig = {
-//     // Popup signin flow rather than redirect flow.
-//     signInFlow: 'popup',
-//     // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-//     signInSuccessUrl: '/',
-//     // We will display Google and Facebook as auth providers.
-//     signInOptions: [
-//         firebase.auth.GoogleAuthProvider.PROVIDER_ID
-//     ]
-// };
 
 function SignUp() {
     const defaultValues = {
@@ -67,40 +58,62 @@ function SignUp() {
             setError(errorMessage)
         )
     }
-    return (
-        <>
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    id="email-input"
-                    name="email"
-                    label="Enter Email"
-                    type="text"
-                    value={formValues.email}
-                    onChange={handleInputChange}
-                />
-                <TextField
-                    id="password-input"
-                    name="password"
-                    label="Enter Password"
-                    type="password"
-                    value={formValues.password}
-                    onChange={handleInputChange}
-                />
-                <TextField
-                    id="password-input-check"
-                    name="passwordCheck"
-                    label="Enter Password Again"
-                    type="password"
-                    value={formValues.passwordCheck}
-                    onChange={handleInputChange}
-                />
-                <Button variant="contained" color="primary" type="submit">
-                    Submit
-                </Button>
-            </form>
-            {error}
-        </>
-    )
+    const [html, setHtml] = useState(signUpFields);
+    function renderHtml () {
+        return(
+            setHtml(<SignIn />)
+        )
+    }
+    function signUpFields() {
+        return (
+            <>
+                <h1 className='signUpText'>Sign Up for Ching</h1>
+                <form onSubmit={handleSubmit} className='signUpForm'>
+                    <TextField
+                        id="email-input"
+                        name="email"
+                        label="Enter Email"
+                        type="text"
+                        fullWidth
+                        margin='normal'
+                        value={formValues.email}
+                        onChange={handleInputChange}
+                    />
+                    <TextField
+                        id="password-input"
+                        name="password"
+                        label="Enter Password"
+                        type="password"
+                        fullWidth
+                        margin='normal'
+                        value={formValues.password}
+                        onChange={handleInputChange}
+                    />
+                    <TextField
+                        id="password-input-check"
+                        name="passwordCheck"
+                        label="Enter Password Again"
+                        type="password"
+                        fullWidth
+                        margin='normal'
+                        value={formValues.passwordCheck}
+                        onChange={handleInputChange}
+                    />
+                    <Button variant="contained" color="primary" type="submit">
+                        Submit
+                    </Button>
+                </form>
+                {error}
+                <br></br><br></br>
+                <p className='text'>————— Already have an account? —————</p>
+                <br></br>
+                <div className="signInButton">
+                    <Button variant="outlined" startIcon={<AccountCircle />} onClick={renderHtml}>Sign in here!</Button>
+                </div>
+            </>
+        )
+    }
+    return(<>{html}</>)
 }
 
 export default SignUp

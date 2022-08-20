@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import '../styles/Profile.css'
 import NewSideBar from '../components/NewSideBar'
 import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { getFirestore, doc, getDoc, collection, updateDoc } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { Avatar, Button, Modal, Box, Typography, TextField, getCardHeaderUtilityClass } from '@mui/material'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -14,6 +13,7 @@ import { db, auth } from '../firebase.js'
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import InputAdornment from '@mui/material/InputAdornment';
 import InfoIcon from '@mui/icons-material/Info';
+import '../styles/Profile.css'
 
 export default function Profile(props) {
     const [profileSnapshot] = useCollection(collection(db, "profile"));
@@ -40,6 +40,16 @@ export default function Profile(props) {
         }
     };
     const [value, setValue] = React.useState(null);
+    function signOutAcc() {
+        signOut(auth).then(() => {
+            sessionStorage.removeItem('userSignedIn');
+            sessionStorage.removeItem('profileSetUp');
+            window.location.reload(true);
+
+          }).catch((error) => {
+            console.log('Failed to log out: ' + error);
+          });
+    }
 
     return (
         <>
@@ -47,7 +57,7 @@ export default function Profile(props) {
             {/* Code to Grab User Profile Account*/}
             <div class="profileContainer">
                 <Avatar></Avatar>
-                <h1>{userProfile?.name}</h1>
+                <h1 class="profileName">{userProfile?.name}</h1>
                 <TextField
                     label="Name"
                     value={userProfile?.name}
@@ -60,11 +70,11 @@ export default function Profile(props) {
                     variant='outlined'
                     InputProps={{
                         startAdornment: (
-                          <InputAdornment position="start">
-                            <AccountCircle />
-                          </InputAdornment>
+                            <InputAdornment position="start">
+                                <AccountCircle />
+                            </InputAdornment>
                         ),
-                      }}
+                    }}
                     onChange={handleInputChange}
                 />
                 <TextField
@@ -80,31 +90,37 @@ export default function Profile(props) {
                     variant='outlined'
                     InputProps={{
                         startAdornment: (
-                          <InputAdornment position="start">
-                            <InfoIcon />
-                          </InputAdornment>
+                            <InputAdornment position="start">
+                                <InfoIcon />
+                            </InputAdornment>
                         ),
-                      }}
+                    }}
                     onChange={handleInputChange}
                 />
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <DatePicker
-                        id="birthday-input"
-                        label="Enter your birthday"
-                        name="birthday"
-                        fullWidth
-                        margin='normal'
-                        size='large'
-                        value={userProfile?.birthday}
-                        onChange={async (newValue) => {
-                            const updateRef = doc(db, 'profile', props.uid);
-                            await updateDoc(updateRef, {
-                                birthday: String(newValue._d).substring(4, 15)
-                            });
-                        }}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                </LocalizationProvider>
+                <div class='birthdayPicker'>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <DatePicker
+                            id="birthday-input"
+                            label="Enter your birthday"
+                            name="birthday"
+                            fullWidth
+                            margin='normal'
+                            size='large'
+                            value={userProfile?.birthday}
+                            onChange={async (newValue) => {
+                                const updateRef = doc(db, 'profile', props.uid);
+                                await updateDoc(updateRef, {
+                                    birthday: String(newValue._d).substring(4, 15)
+                                });
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>
+                </div>
+
+                <div className='signOutButton'>
+                    <Button variant='outlined' startIcon={<AccountCircle />} color='error' onClick={signOutAcc} >Sign Out</Button>
+                </div>
             </div>
         </>
 

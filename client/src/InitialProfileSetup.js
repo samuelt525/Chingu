@@ -4,7 +4,7 @@ import {
     Button
 } from '@mui/material';
 
-import {firebaseConfig} from './firebase';
+import { firebaseConfig } from './firebase';
 import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { getFirestore, setDoc, doc } from "firebase/firestore";
@@ -14,6 +14,7 @@ import { TextField } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import './styles/InitialProfileSetup.css';
 import App from './App';
 
 function InitialProfileSetup() {
@@ -24,12 +25,12 @@ function InitialProfileSetup() {
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-          uid = user.uid;
+            uid = user.uid;
         }
         else {
-          console.log("This shouldn't occur");
+            console.log("This shouldn't occur");
         }
-      });
+    });
 
     const defaultValues = {
         name: "",
@@ -61,7 +62,7 @@ function InitialProfileSetup() {
                     bio: formValues.bio,
                     userID: uid,
                     friends: []
-                }, {merge: true});
+                }, { merge: true });
                 sessionStorage.setItem('profileSetUp', '1');
                 window.location.reload(false);
             }
@@ -79,43 +80,55 @@ function InitialProfileSetup() {
     const [value, setValue] = React.useState(null);
     return (
         <>
-            <h1>Welcome to Ching!</h1>
-            <h2>Enter your information below:</h2>
-            <form onSubmit={handleSubmit}>
-                <TextField
-                    id="name-input"
-                    name="name"
-                    label="Enter your name"
-                    type="text"
-                    value={formValues.name}
-                    onChange={handleInputChange}
-                />
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <DatePicker
-                        id="birthday-input"
-                        label="Enter your birthday"
-                        name="birthday"
-                        value={value}
-                        onChange={(newValue) => {
-                            setValue(newValue);
-                            formValues.birthday = String(newValue._d).substring(4, 15);
-                            console.log(formValues.birthday);
-                        }}
-                        renderInput={(params) => <TextField {...params} />}
+            <h1 className='welcome'>Welcome to Ching!</h1>
+            <h2 className='directions'>Enter your information below:</h2>
+            <div className='formContainer'>
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        id="name-input"
+                        name="name"
+                        label="Enter your name"
+                        type="text"
+                        fullWidth
+                        margin='normal'
+                        value={formValues.name}
+                        onChange={handleInputChange}
                     />
-                </LocalizationProvider>
-                <TextField
-                    id="bio-input"
-                    name="bio"
-                    label="Enter a bio"
-                    type="text"
-                    value={formValues.bio}
-                    onChange={handleInputChange}
-                />
-                <Button variant="contained" color="primary" type="submit">
-                    Submit
-                </Button>
-            </form>
+                    <TextField
+                        id="bio-input"
+                        name="bio"
+                        label="Enter a bio"
+                        type="text"
+                        fullWidth
+                        margin='normal'
+                        value={formValues.bio}
+                        onChange={handleInputChange}
+                    />
+                    <br />
+                    <br />
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <DatePicker
+                            id="birthday-input"
+                            label="Enter your birthday"
+                            name="birthday"
+                            value={value}
+                            fullWidth
+                            margin='normal'
+                            onChange={(newValue) => {
+                                setValue(newValue);
+                                formValues.birthday = String(newValue._d).substring(4, 15);
+                                console.log(formValues.birthday);
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>
+                    <br />
+                    <br />
+                    <Button variant="contained" color="primary" type="submit">
+                        Submit
+                    </Button>
+                </form>
+            </div>
             {error}
         </>
     )

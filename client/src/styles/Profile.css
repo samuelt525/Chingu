@@ -1,4 +1,24 @@
 .profileContainer {
     margin-left: 30%;
     margin-right: 30%;
+    margin-top: 2%;
+}
+
+.MuiAvatar-root {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profileName {
+    text-align: center;
+}
+
+.birthdayPicker {
+    text-align: center;
+    margin-top: 3%;
+}
+
+.signOutButton {
+    margin-top: 2%;
+    text-align: center;
 }

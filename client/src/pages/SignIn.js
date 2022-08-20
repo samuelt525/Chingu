@@ -43,6 +43,8 @@ function SignIn() {
     function signInButtons() {
         return (
             <>
+            <h1 className='ching'>Ching</h1>
+            <h2 className='signInText'>Sign in to Ching!</h2>
                 <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
                 <br></br>
                 <p className='text'>————— Don't have an account? —————</p>
