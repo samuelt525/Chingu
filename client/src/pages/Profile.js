@@ -17,6 +17,7 @@ import '../styles/Profile.css'
 import ImageUploading from "react-images-uploading";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { useNavigate } from "react-router-dom";
 
 
 export default function Profile(props) {
@@ -44,10 +45,12 @@ export default function Profile(props) {
         }
     };
     const [value, setValue] = React.useState(null);
+    const navigate = useNavigate();
     function signOutAcc() {
         signOut(auth).then(() => {
             sessionStorage.removeItem('userSignedIn');
             sessionStorage.removeItem('profileSetUp');
+            navigate("/");
             window.location.reload(true);
 
         }).catch((error) => {
