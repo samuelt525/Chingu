@@ -1,35 +1,62 @@
 .friendsListBlock {
-    margin-left: 30%;
-    margin-right: 30%;
+    margin-left: 40%;
+    margin-right: 40%;
 }
 
 .friendsAvatar {
     margin-right: 1%;
+    display: inline;
+}
+
+.profile{
+    background-color: #fad881;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    padding: 8px;
+    border: none;
+    width: 100%;
+    height: 60px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+.profile:hover{
+    background-color: #42464e; /* Green */
+    color: white;
+    width: 100%;
+}
+.hovered {
+    background-color: #42464e; /* Green */
+}
+
+.friendInfo {
+    margin-top: 4px;
+    margin-right: 0;
+    margin-left: auto;
+    text-align: right;
 }
 
 .friendName {
-    display: flex;
-    justify-content: center;
+    text-align:left;
     font-size: 16px;
     margin-left: 8px;
-    margin-top: 11px;
+    margin-top: 10px;
+    display: inline;
 }
 
 .friendBio {
     display: flex;
-    justify-content: center;
+    justify-content: right;
     font-size: 12px;
     margin-left: 8px;
-    margin-top: 11px;
 }
 
 .friendBday {
     display: flex;
-    justify-content: center;
+    justify-content: right;
     text-align:right;
-    font-size: 16px;
+    font-size: 12px;
     margin-left: 8px;
-    margin-top: 11px;
 }
 
 .pageTitle {

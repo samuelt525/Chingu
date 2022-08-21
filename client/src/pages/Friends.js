@@ -25,14 +25,14 @@ export default function Friends(props) {
         return (profiles?.filter(profile => !profile.id.includes(props.uid)).map(profile => {
             if (userProfile.friends.includes(profile.userID)) {
                 return (
-                    <Box>
-                        <button className={activeUser == profile?.userID ? "active chat" : "chat"} onClick={(e) => {
-                            setActiveUser(profile?.userID)
-                        }} >
+                    <Box className='friendBlock'>
+                        <button className={activeUser == profile?.userID ? "hovered profile" : "profile"}>
                             <Avatar className="friendsAvatar" src={profile?.profilePic}></Avatar>
-                            <p className='friendName' id={profile?.userID}> {profile?.name} </p>
-                            <p className='friendBio' id={profile?.userID}> {profile?.bio} </p>
-                            <p className='friendBday' id={profile?.userID}> {profile?.birthday} </p>
+                            <span className='friendName' id={profile?.userID}> {profile?.name} </span>
+                            <div className="friendInfo">
+                                <p className='friendBio' id={profile?.userID}>Bio: {profile?.bio} </p>
+                                <p className='friendBday' id={profile?.userID}>Birthday: {profile?.birthday}</p>
+                            </div>
                         </button>
                     </Box>
                 )
