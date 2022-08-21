@@ -1,0 +1,18 @@
+.topbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #37393e;
+    border-style: solid;
+    border-width: 1px;
+    padding: 8px;
+    height: 60px;
+    width: 100%;
+
+}
+
+.ToUserName {
+    color: #c5cae9;
+    font-size: 24px;
+}

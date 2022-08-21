@@ -1,5 +1,6 @@
 import React from "react"
 import { Avatar } from "@mui/material"
+import '../styles/TopBar.css'
 export default function TopBar(props){
     return (
             <div className='topbar'>
