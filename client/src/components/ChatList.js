@@ -186,13 +186,15 @@ export function ChatList(props) {
                 <div className='messages'>
                     {getMessage()}
                 </div>
+                <div ref={bottomOfChat} />
                 <TextField
                     id="outlined-basic"
-                    label="Outlined"
+                    className='textInput'
+                    label="Message"
                     variant="outlined"
                     value={currentMessage}
                     onKeyPress={(e) => {
-                        if (e.key === "Enter") {
+                        if (e.key === "Enter" && e.target.value !== "") {
                             SendMessage(e.target.value)
                             setCurrentMessage("")
                         } else {
@@ -200,7 +202,6 @@ export function ChatList(props) {
                         }
                     }}
                 />
-                <div ref={bottomOfChat} />
             </div>
         </div>
     )

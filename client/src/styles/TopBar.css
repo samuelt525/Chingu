@@ -4,10 +4,8 @@
     align-items: center;
     justify-content: center;
     background-color: #37393e;
-    border-style: solid;
-    border-width: 1px;
+    border-bottom: 1px solid black;
     padding: 8px;
-    height: 60px;
     width: 100%;
 
 }

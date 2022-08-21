@@ -10,12 +10,13 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    flex: 1;
     width: 75%;
     height: 100%;
     background-color: #37393e;
 }
 .friendsListContainer {
-    background-color: #21252b;
+    background-color: #ecc46c;
     display: flex;
     flex-direction: column;
     width: 25%;
@@ -29,6 +30,9 @@
     justify-content: center;
     border-bottom: 1px solid;
     border-bottom-color: #37393e;
+    border-top: 1px solid;
+    border-top-color: #37393e;
+    border-radius: 4px;
     padding: 8px;
 }
 
@@ -43,17 +47,19 @@
     flex-wrap: nowrap;
     padding: 8px;
     border: none;
+    background-color: inherit;
     width: 100%;
     height: 60px;
 }
 
 .chat:hover{
-    background-color: #42464e; /* Green */
+    background-color: #1d84f4;
     color: white;
     width: 100%;
 }
 .active {
-    background-color: #42464e; /* Green */
+    background-color: #1d84f4; 
+    color: white;
 }
 .chatText{
     display: flex;
@@ -62,4 +68,11 @@
     font-size: 16px;
     margin-left: 16px;
     margin-top: 12px;
+}
+
+.textInput{
+    align-self: flex-end;
+    flex-grow: 1;
+    width: 100%;
+    margin-top: auto;
 }
