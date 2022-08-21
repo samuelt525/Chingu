@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import '../styles/ChatList.css'
-import '../styles/Messages.css'
-import '../styles/Chat.css'
 import { Avatar, Button, Modal, Box, Typography, TextField, getCardHeaderUtilityClass } from '@mui/material'
 import { getFirestore, doc, getDoc, collection, setDoc, serverTimestamp, query, orderBy, limit, onSnapshot, addDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from '../firebase.js'
 import { useCollection } from 'react-firebase-hooks/firestore';
 import TopBar from './TopBar'
+import '../styles/Messages.css'
+import '../styles/Chat.css'
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -18,15 +18,15 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-
 export function ChatList(props) {
     const [createChatUser, setCreateChatUser] = useState("");
     const [activeUser, setActiveUser] = useState("");
-    const [snapshot] = useCollection(collection(db, "chats"))
+    const [snapshot] = useCollection(query(collection(db, "chats"), orderBy("lastModified", "desc")))
     const chats = snapshot?.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
     }))
+    console.log(chats)
 
 
     const [profileSnapshot] = useCollection(collection(db, "profile"))
@@ -41,7 +41,6 @@ export function ChatList(props) {
     //push data to db
     useEffect(() => {
         const fetchData = async () => {
-            console.log("did this get called")
             const chatsRef = await collection(db, "chats")
             await addDoc(chatsRef, {
                 users: [props.uid, createChatUser],
@@ -77,7 +76,6 @@ export function ChatList(props) {
                     <Box>
                         <button className="chat" onClick={(e) => {
                             setCreateChatUser(profile.userID)
-                            console.log("Jello")
                         }} >
                             <Avatar src={profile?.profilePic}></Avatar>
                             <p className='chatText' id={profile.userID}> {profile.name} </p>
@@ -90,17 +88,20 @@ export function ChatList(props) {
     useEffect(() => {
         const chatdb = query(collection(db, `chats/${chatid}/message`), orderBy("created", "desc"), limit(15))
         const snap = onSnapshot(chatdb, (message) => {
-            console.log(message)
             setMessages(message.docs.map(doc => doc.data()).reverse())
         })
-        console.log(activeUser)
     }, [activeUser])
+
     function getMessage() {
         return messages.map(msg => {
             const sender = msg.fromUser === props.uid;
             return (
-                <div className={sender ? 'blue message' : 'green message'}>
-                    <p className='black'>{msg.messages}</p>
+                <div className="messageContainer" style={sender ? {alignSelf: 'flex-end', flexDirection: 'row-reverse'} : {alignSelf: 'flex-start'}}>
+                    <Avatar src={sender ? getProfile(props.uid)?.profilePic 
+                    : getProfile(activeUser)?.profilePic} height={8} width={8}/>
+                    <div className={sender ? 'blue message' : 'green message'}>
+                        <p className='black'>{msg.messages}</p>
+                    </div>
                 </div>
             )
         })
@@ -108,7 +109,10 @@ export function ChatList(props) {
     }
     function SendMessage(text) {
         const messageDb = collection(db, `chats/${chatid}/message`)
-
+        const chatDb = doc(db, "chats", chatid)
+        setDoc(chatDb, {
+            lastModified: serverTimestamp(),
+        }, {merge: true})
         return addDoc(messageDb, {
             created: serverTimestamp(),
             messages: text,

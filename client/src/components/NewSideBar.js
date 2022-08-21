@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
     Drawer,
-    List,
     IconButton
 } from '@mui/material'
 import { Link } from 'react-router-dom'
@@ -10,6 +9,7 @@ import * as AIIcons from 'react-icons/ai'
 import * as FIIcons from 'react-icons/fi'
 import * as CGIcons from 'react-icons/cg'
 import '../styles/Sidebar.css'
+import ChingLogo from '../Ching-logos/Ching-logos_transparent.png'
 
 const SidebarData = [
     {
@@ -45,6 +45,11 @@ function NewSideBar() {
                 <IconButton  onClick={showSidebar} size='large' edge='start' color='inherit' aria-label='logo'>
                     <FAIcons.FaBars/>
                 </IconButton>
+                <div className='logoContainer'>
+                    <Link to="/" className='link' height={100}>
+                        <img className='logo' src={ChingLogo} />
+                    </Link>
+                </div>
             </div>
             <Drawer open={sidebar} onClose={showSidebar} anchor="left">
                 <div className='list'>
