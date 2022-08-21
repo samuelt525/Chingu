@@ -61,7 +61,7 @@ function mainPage(uid) {
           <Route path="/" element={<Home />} />
           <Route path="messages" element={<Messages uid={uid} />} />
           <Route path="profile" element={<Profile uid={uid}/>} />
-          <Route path="friends" element={<Friends />} />
+          <Route path="friends" element={<Friends uid={uid}/>} />
         </Routes>
       </BrowserRouter>
     </>
