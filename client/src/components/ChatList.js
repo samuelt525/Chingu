@@ -61,7 +61,7 @@ export function ChatList(props) {
                     <button className={activeUser == profile?.userID ? "active chat" : "chat"} onClick={(e) => {
                         setActiveUser(profile?.userID)
                     }} >
-                        <Avatar></Avatar>
+                        <Avatar src={profile?.profilePic}></Avatar>
                         <p className='chatText' id={profile?.userID}> {profile?.name} </p>
                     </button>
                 </Box>
@@ -79,7 +79,7 @@ export function ChatList(props) {
                             setCreateChatUser(profile.userID)
                             console.log("Jello")
                         }} >
-                            <Avatar></Avatar>
+                            <Avatar src={profile?.profilePic}></Avatar>
                             <p className='chatText' id={profile.userID}> {profile.name} </p>
                         </button>
                     </Box>
@@ -144,7 +144,7 @@ export function ChatList(props) {
         <div className='container'>
             <div className='friendsListContainer' >
                 <div className='friendsListHeader'>
-                    <Avatar></Avatar>
+                    <Avatar src={getProfile(props.uid)?.profilePic}></Avatar>
                     <p style={{ fontSize: "24px" }}> {getProfile(props.uid)?.name} </p>
                 </div>
                 <div className="newChatButtonContainer" >
@@ -178,7 +178,7 @@ export function ChatList(props) {
                 </div>
             </div>
             <div className='chatContainer'>
-                <TopBar name={getProfile(activeUser)?.name} />
+                <TopBar name={getProfile(activeUser)?.name} profilePic={getProfile(activeUser)?.profilePic} />
                 <div className='messages'>
                     {getMessage()}
                 </div>

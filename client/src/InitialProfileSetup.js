@@ -7,22 +7,25 @@ import {
 import { firebaseConfig } from './firebase';
 import 'firebase/auth';
 import * as firebase from 'firebase/app';
-import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { updateDoc, setDoc, doc, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { TextField } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { Avatar } from "@mui/material"
 import './styles/InitialProfileSetup.css';
 import App from './App';
+import ImageUploading from "react-images-uploading";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { db, auth, storage } from './firebase.js'
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 function InitialProfileSetup() {
     const app = firebase.initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
     var uid = "";
-    console.log(auth);
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -37,7 +40,8 @@ function InitialProfileSetup() {
         name: "",
         birthday: "",
         profilePic: "",
-        bio: ""
+        bio: "",
+        profilePic: ""
     };
     const [formValues, setFormValues] = useState(defaultValues);
     const handleInputChange = (e) => {
@@ -79,11 +83,35 @@ function InitialProfileSetup() {
             setError(errorMessage)
         )
     }
+
+    const [images, setImages] = React.useState([]);
+    const maxNumber = 1;
+    const onChange = (imageList, addUpdateIndex) => {
+        // data for submit
+        console.log(imageList, addUpdateIndex);
+        setImages(imageList);
+    };
+
+    const uploadProfilePic = async (event) => {
+        event.preventDefault();
+        const profilePicsRef = ref(storage, uid+'-profile-pic');
+        uploadBytes(profilePicsRef, images[0].file).then((snapshot) => {
+            console.log('Uploaded a Picture successfully!');
+        });
+        getDownloadURL(profilePicsRef).then(async (url) => {
+            const updateRef = doc(db, 'profile', uid);
+            await setDoc(updateRef, {
+                profilePic: url
+            });
+        });
+    }
+
     const [value, setValue] = React.useState(null);
     return (
         <>
             <h1 className='welcome'>Welcome to Ching!</h1>
             <h2 className='directions'>Enter your information below:</h2>
+            <Avatar src={formValues.profilePic}></Avatar>
             <div className='formContainer'>
                 <form onSubmit={handleSubmit}>
                     <TextField
@@ -126,6 +154,42 @@ function InitialProfileSetup() {
                     </LocalizationProvider>
                     <br />
                     <br />
+                    <ImageUploading
+                        value={images}
+                        onChange={onChange}
+                        maxNumber={maxNumber}
+                        dataURLKey="data_url"
+                        acceptType={["jpg", "png"]}
+                    >
+                        {({
+                            imageList,
+                            onImageUpload,
+                            onImageRemoveAll,
+                            onImageUpdate,
+                            onImageRemove,
+                            isDragging,
+                            dragProps
+                        }) => (
+                            // write your building UI
+                            <div className="upload__image-wrapper">
+                                <Button startIcon={<InsertPhotoIcon />} variant='outlined' style={isDragging ? { color: "red" } : null}
+                                    onClick={onImageUpload}
+                                    {...dragProps}
+                                >
+                                    Click or Drop profile picture here</Button>
+                                &nbsp;
+                                {imageList.map((image, index) => (
+                                    <div key={index} className="image-item">
+                                        <img src={image.data_url} alt="" width="100" />
+                                        <div className="image-item__btn-wrapper">
+                                            <Button variant='outlined' onClick={uploadProfilePic}>Update profile picture</Button>
+                                            <Button variant='outlined' onClick={() => onImageRemove(index)}>Remove</Button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </ImageUploading>
                     <Button variant="contained" color="primary" type="submit">
                         Submit
                     </Button>

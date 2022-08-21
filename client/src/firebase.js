@@ -21,6 +21,8 @@ import {
     addDoc,
 } from "firebase/firestore";
 import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { getStorage, ref } from "firebase/storage";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyB5FCzbgcKs0T7qPQoGCc1dk8nqMvyEGkM",
@@ -39,5 +41,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage();
 
-export {firebaseConfig, auth, db};
+
+export {firebaseConfig, auth, db, storage};

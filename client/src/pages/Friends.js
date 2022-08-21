@@ -29,7 +29,7 @@ export default function Friends(props) {
                         <button className={activeUser == profile?.userID ? "active chat" : "chat"} onClick={(e) => {
                             setActiveUser(profile?.userID)
                         }} >
-                            <Avatar className="friendsAvatar"></Avatar>
+                            <Avatar className="friendsAvatar" src={profile?.profilePic}></Avatar>
                             <p className='friendName' id={profile?.userID}> {profile?.name} </p>
                             <p className='friendBio' id={profile?.userID}> {profile?.bio} </p>
                             <p className='friendBday' id={profile?.userID}> {profile?.birthday} </p>
