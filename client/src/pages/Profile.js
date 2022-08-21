@@ -56,7 +56,7 @@ export default function Profile(props) {
             <NewSideBar />
             {/* Code to Grab User Profile Account*/}
             <div class="profileContainer">
-                <Avatar></Avatar>
+                <Avatar className="profileAvatar"></Avatar>
                 <h1 class="profileName">{userProfile?.name}</h1>
                 <TextField
                     label="Name"

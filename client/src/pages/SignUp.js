@@ -58,62 +58,58 @@ function SignUp() {
             setError(errorMessage)
         )
     }
-    const [html, setHtml] = useState(signUpFields);
-    function renderHtml () {
-        return(
-            setHtml(<SignIn />)
-        )
+    function renderHtml() {
+        window.location.reload(true);
     }
-    function signUpFields() {
-        return (
-            <>
-                <h1 className='signUpText'>Sign Up for Ching</h1>
-                <form onSubmit={handleSubmit} className='signUpForm'>
-                    <TextField
-                        id="email-input"
-                        name="email"
-                        label="Enter Email"
-                        type="text"
-                        fullWidth
-                        margin='normal'
-                        value={formValues.email}
-                        onChange={handleInputChange}
-                    />
-                    <TextField
-                        id="password-input"
-                        name="password"
-                        label="Enter Password"
-                        type="password"
-                        fullWidth
-                        margin='normal'
-                        value={formValues.password}
-                        onChange={handleInputChange}
-                    />
-                    <TextField
-                        id="password-input-check"
-                        name="passwordCheck"
-                        label="Enter Password Again"
-                        type="password"
-                        fullWidth
-                        margin='normal'
-                        value={formValues.passwordCheck}
-                        onChange={handleInputChange}
-                    />
-                    <Button variant="contained" color="primary" type="submit">
-                        Submit
-                    </Button>
-                </form>
-                {error}
-                <br></br><br></br>
-                <p className='text'>————— Already have an account? —————</p>
-                <br></br>
-                <div className="signInButton">
-                    <Button variant="outlined" startIcon={<AccountCircle />} onClick={renderHtml}>Sign in here!</Button>
-                </div>
-            </>
-        )
-    }
-    return(<>{html}</>)
+
+    return (
+        <>
+            <h1 className='signUpText'>Sign Up for Ching</h1>
+            <form onSubmit={handleSubmit} className='signUpForm'>
+                <TextField
+                    id="email-input"
+                    name="email"
+                    label="Enter Email"
+                    type="text"
+                    fullWidth
+                    margin='normal'
+                    value={formValues.email}
+                    onChange={handleInputChange}
+                />
+                <TextField
+                    id="password-input"
+                    name="password"
+                    label="Enter Password"
+                    type="password"
+                    fullWidth
+                    margin='normal'
+                    value={formValues.password}
+                    onChange={handleInputChange}
+                />
+                <TextField
+                    id="password-input-check"
+                    name="passwordCheck"
+                    label="Enter Password Again"
+                    type="password"
+                    fullWidth
+                    margin='normal'
+                    value={formValues.passwordCheck}
+                    onChange={handleInputChange}
+                />
+                <Button variant="contained" color="primary" type="submit">
+                    Submit
+                </Button>
+            </form>
+            {error}
+            <br></br><br></br>
+            <p className='text'>————— Already have an account? —————</p>
+            <br></br>
+            <div className="signInButton">
+                <Button variant="outlined" startIcon={<AccountCircle />} onClick={renderHtml}>Sign in here!</Button>
+            </div>
+        </>
+    )
+
 }
 
 export default SignUp

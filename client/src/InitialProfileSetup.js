@@ -22,6 +22,7 @@ function InitialProfileSetup() {
     const db = getFirestore(app);
     const auth = getAuth(app);
     var uid = "";
+    console.log(auth);
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -61,6 +62,7 @@ function InitialProfileSetup() {
                     birthday: formValues.birthday,
                     bio: formValues.bio,
                     userID: uid,
+                    email: auth.currentUser.email,
                     friends: []
                 }, { merge: true });
                 sessionStorage.setItem('profileSetUp', '1');
