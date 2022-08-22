@@ -39,15 +39,14 @@ function App() {
     )
   }
   else {
-    if (sessionStorage.getItem('profileSetUp') == '0') {
+    if (sessionStorage.getItem('profileSetUp') != '0') {
       return (
-        <InitialProfileSetup />
+        mainPage(uid)
       )
     }
     else {
-
       return (
-        mainPage(uid)
+        <InitialProfileSetup />
       )
     }
   }
