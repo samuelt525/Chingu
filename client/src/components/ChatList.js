@@ -5,6 +5,7 @@ import { db, auth } from '../firebase.js'
 import { useCollection } from 'react-firebase-hooks/firestore';
 import TopBar from './TopBar'
 import { Link } from 'react-router-dom'
+import { makeStyles } from "@mui/styles";
 import '../styles/Messages.css'
 import '../styles/Chat.css'
 
@@ -17,8 +18,10 @@ const style = {
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
+    backgroundColor: '#fff4a4',
     p: 4,
 };
+
 export function ChatList(props) {
     const [createChatUser, setCreateChatUser] = useState("");
     const [activeUser, setActiveUser] = useState("");
@@ -97,9 +100,9 @@ export function ChatList(props) {
         return messages.map(msg => {
             const sender = msg.fromUser === props.uid;
             return (
-                <div className="messageContainer" style={sender ? {alignSelf: 'flex-end', flexDirection: 'row-reverse'} : {alignSelf: 'flex-start'}}>
-                    <Avatar src={sender ? getProfile(props.uid)?.profilePic 
-                    : getProfile(activeUser)?.profilePic} height={8} width={8}/>
+                <div className="messageContainer" style={sender ? { alignSelf: 'flex-end', flexDirection: 'row-reverse' } : { alignSelf: 'flex-start' }}>
+                    <Avatar src={sender ? getProfile(props.uid)?.profilePic
+                        : getProfile(activeUser)?.profilePic} height={8} width={8} />
                     <div className={sender ? 'blue message' : 'green message'}>
                         <p className='black'>{msg.messages}</p>
                     </div>
@@ -113,7 +116,7 @@ export function ChatList(props) {
         const chatDb = doc(db, "chats", chatid)
         setDoc(chatDb, {
             lastModified: serverTimestamp(),
-        }, {merge: true})
+        }, { merge: true })
         return addDoc(messageDb, {
             created: serverTimestamp(),
             messages: text,
@@ -144,15 +147,15 @@ export function ChatList(props) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-
+    const classes = useStyles();
     return (
         <div className='container'>
             <div className='friendsListContainer' >
 
-                    <Link to='/profile' className='friendsListHeader' style={{textDecoration: 'none'}}>
-                        <Avatar src={getProfile(props.uid)?.profilePic} style={{margin: '4px 12px'}}></Avatar>
-                        <p style={{ fontSize: "24px", color: "white" }}> {getProfile(props.uid)?.name} </p>
-                    </Link>
+                <Link to='/profile' className='friendsListHeader' style={{ textDecoration: 'none' }}>
+                    <Avatar src={getProfile(props.uid)?.profilePic} style={{ margin: '4px 12px' }}></Avatar>
+                    <p style={{ fontSize: "24px", color: "white" }}> {getProfile(props.uid)?.name} </p>
+                </Link>
                 <div className="newChatButtonContainer" >
                     <Button variant="outlined" style={{
                         maxWidth: '120px',
@@ -191,10 +194,10 @@ export function ChatList(props) {
                 <div ref={bottomOfChat} />
                 <TextField
                     id="outlined-basic"
-                    className='textInput'
                     label="Message"
                     variant="outlined"
                     value={currentMessage}
+                    inputProps={{ className: classes.input }}
                     onKeyPress={(e) => {
                         if (e.key === "Enter" && e.target.value !== "") {
                             SendMessage(e.target.value)
@@ -208,4 +211,13 @@ export function ChatList(props) {
         </div>
     )
 }
+const useStyles = makeStyles({
+    input: {
+        display: "flex",
+        color: "white",
+        marginTop: "auto",
+        alignSelf: "flex-end",
+        width: "100%",
+    }
+  });
 export default ChatList
