@@ -4,6 +4,7 @@ import { getFirestore, doc, getDoc, collection, setDoc, serverTimestamp, query, 
 import { db, auth } from '../firebase.js'
 import { useCollection } from 'react-firebase-hooks/firestore';
 import TopBar from './TopBar'
+import { Link } from 'react-router-dom'
 import '../styles/Messages.css'
 import '../styles/Chat.css'
 
@@ -147,10 +148,11 @@ export function ChatList(props) {
     return (
         <div className='container'>
             <div className='friendsListContainer' >
-                <div className='friendsListHeader'>
-                    <Avatar src={getProfile(props.uid)?.profilePic}></Avatar>
-                    <p style={{ fontSize: "24px" }}> {getProfile(props.uid)?.name} </p>
-                </div>
+
+                    <Link to='/profile' className='friendsListHeader' style={{textDecoration: 'none'}}>
+                        <Avatar src={getProfile(props.uid)?.profilePic} style={{margin: '4px 12px'}}></Avatar>
+                        <p style={{ fontSize: "24px", color: "white" }}> {getProfile(props.uid)?.name} </p>
+                    </Link>
                 <div className="newChatButtonContainer" >
                     <Button variant="outlined" style={{
                         maxWidth: '120px',

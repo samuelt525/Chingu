@@ -1,0 +1,10 @@
+.homeContainer {
+    background-color: #fff4a4;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.textContainer{
+    display: flex;
+    flex-direction: column;
+}
