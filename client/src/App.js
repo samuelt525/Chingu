@@ -12,7 +12,7 @@ import Messages from './pages/Messages'
 import Profile from './pages/Profile'
 import Friends from './pages/Friends';
 import Home from './pages/Home'
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 const app = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -25,7 +25,10 @@ function App() {
       setUID(user.uid)
       sessionStorage.setItem('userSignedIn', '1');
       if (sessionStorage.getItem('profileSetUp') != '1') {
-        docExists('profile', uid);
+        let docSnapshot = getDoc(doc(db, 'profile', user.uid));
+        if (docSnapshot._document == null) {
+          sessionStorage.setItem('profileSetUp', '0');
+        }
       }
     }
     else {
@@ -33,46 +36,34 @@ function App() {
     }
   });
 
-  if (sessionStorage.getItem('userSignedIn') != '1') {
+  if (sessionStorage.getItem('userSignedIn') == '0' || sessionStorage.getItem('userSignedIn') == null) {
     return (
       <SignIn />
     )
   }
-  else {
-    if (sessionStorage.getItem('profileSetUp') != '0') {
-      return (
-        mainPage(uid)
-      )
-    }
-    else {
-      return (
-        <InitialProfileSetup />
-      )
-    }
+  if (sessionStorage.getItem('profileSetUp') == '0' || sessionStorage.getItem('profileSetUp') == null) {
+    return (
+      <InitialProfileSetup />
+    )
+  }
+    return mainPage(uid)
+
+  function mainPage(uid) {
+    return (
+      <>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="messages" element={<Messages uid={uid} />} />
+            <Route path="profile" element={<Profile uid={uid} />} />
+            <Route path="friends" element={<Friends uid={uid} />} />
+          </Routes>
+        </BrowserRouter>
+      </>
+    )
   }
 }
 
-function mainPage(uid) {
-  return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="messages" element={<Messages uid={uid} />} />
-          <Route path="profile" element={<Profile uid={uid}/>} />
-          <Route path="friends" element={<Friends uid={uid}/>} />
-        </Routes>
-      </BrowserRouter>
-    </>
-  )
-}
-
-async function docExists(docName, docId) {
-  let docSnapshot = await getDoc(doc(db, docName, docId));
-  if (docSnapshot._document == null) {
-    sessionStorage.setItem('profileSetUp', '0');
-  }
-}
 
 
 export default App;
