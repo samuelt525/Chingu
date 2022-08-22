@@ -5,9 +5,9 @@ import {
 } from '@mui/material';
 import MailIcon from '@mui/icons-material/Mail';
 import './SignIn.css';
-
+import ChingLogo from '../Ching-logos/Ching-logos_black_cropped.png'
 import 'firebase/auth';
-import {firebaseConfig} from '../firebase';
+import { firebaseConfig } from '../firebase';
 import { getAuth, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 import firebase from 'firebase/compat/app';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
@@ -35,48 +35,36 @@ const uiConfig = {
 function SignIn() {
     const [html, setHtml] = useState(signInButtons);
 
-    function renderHtml () {
-        return(
+    function renderHtml() {
+        return (
             setHtml(<SignUp />)
         )
     }
     function signInButtons() {
         return (
             <>
-            <h1 className='ching'>Ching</h1>
-            <h2 className='signInText'>Sign in to Ching!</h2>
-                <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-                <br></br>
-                <p className='text'>————— Don't have an account? —————</p>
-                <br></br>
-                <div className="signUpButton">
-                    <Button variant="outlined" startIcon={<MailIcon />} onClick={renderHtml}>Sign up with email</Button>
+                <div className='signInContainer'>
+                    <div className='imageContainer'>
+                        <img src={ChingLogo} height={250} width={600} />
+                    </div>
+                    <h1 className='signInText'>Sign in to Ching!</h1>
+                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+                    <br></br>
+                    <p className='text'>————— Don't have an account? —————</p>
+                    <br></br>
+                    <div className="signUpButton">
+                        <Button variant="outlined" startIcon={<MailIcon />} onClick={renderHtml}>Sign up with email</Button>
+                    </div>
                 </div>
-    
-                {/* <Routes>
-                    <Route path="/SignUp" element={<SignUp />}>
-    
-                    </Route>
-                </Routes> */}
             </>
         )
     }
-    
+
     return (
         <>
             {html}
         </>
     )
 }
-
-// function googleSignInRedirect() {
-//     return (
-//         signInWithRedirect(auth, provider)
-//     )
-// }
-
-// function emailSignIn() {
-//     console.log("FUIFDJLSF");
-// }
 
 export default SignIn

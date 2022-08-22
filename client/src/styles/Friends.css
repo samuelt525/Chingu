@@ -79,3 +79,8 @@
     margin-left: 15px !important;
     margin-top: 25px !important;
 }
+
+.friendsContainer {
+    background-color: #fff4a4;
+    height: 100vh;
+}

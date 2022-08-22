@@ -56,7 +56,7 @@ function NewSideBar() {
                     {SidebarData.map((item, index) => {
                         return (
                             <li key={item.title.toString()} className='nav-text'>
-                                <Link to={item.path}>
+                                <Link className="sideBarLink" to={item.path} style={{ textDecoration: 'none' }}>
                                     {item.icons}
                                     <span>{item.title}</span>
                                 </Link>

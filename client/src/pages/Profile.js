@@ -69,7 +69,7 @@ export default function Profile(props) {
     const uploadProfilePic = async (event) => {
         event.preventDefault();
         console.log(images[0])
-        const profilePicsRef = ref(storage, props.uid+'-profile-pic');
+        const profilePicsRef = ref(storage, props.uid + '-profile-pic');
         uploadBytes(profilePicsRef, images[0].file).then((snapshot) => {
             console.log('Uploaded a Picture successfully!');
         });
@@ -83,110 +83,112 @@ export default function Profile(props) {
 
     return (
         <>
-            <NewSideBar />
-            {/* Code to Grab User Profile Account*/}
-            <div class="profileContainer">
-                <Avatar className="profileAvatar" src={userProfile?.profilePic}></Avatar>
-                <h1 class="profileName">{userProfile?.name}</h1>
-                <TextField
-                    label="Name"
-                    value={userProfile?.name}
-                    name='name'
-                    placeholder="Enter your name"
-                    multiline
-                    fullWidth
-                    size='large'
-                    margin='normal'
-                    variant='outlined'
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <AccountCircle />
-                            </InputAdornment>
-                        ),
-                    }}
-                    onChange={handleInputChange}
-                />
-                <TextField
-                    id="bio-input"
-                    label="Bio"
-                    value={userProfile?.bio}
-                    name='bio'
-                    placeholder="Enter a bio"
-                    multiline
-                    fullWidth
-                    size='large'
-                    margin='normal'
-                    variant='outlined'
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <InfoIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    onChange={handleInputChange}
-                />
-                <div class='birthdayPicker'>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <DatePicker
-                            id="birthday-input"
-                            label="Enter your birthday"
-                            name="birthday"
-                            fullWidth
-                            margin='normal'
-                            size='large'
-                            value={userProfile?.birthday}
-                            onChange={async (newValue) => {
-                                const updateRef = doc(db, 'profile', props.uid);
-                                await updateDoc(updateRef, {
-                                    birthday: String(newValue._d).substring(4, 15)
-                                });
-                            }}
-                            renderInput={(params) => <TextField {...params} />}
-                        />
-                    </LocalizationProvider>
-                </div>
+            <div class='profilePageContainer'>
+                <NewSideBar />
+                <div class="profileContainer">
+                    <Avatar className="profileAvatar" src={userProfile?.profilePic}></Avatar>
+                    <h1 class="profileName">{userProfile?.name}</h1>
+                    <TextField
+                        label="Name"
+                        value={userProfile?.name}
+                        name='name'
+                        placeholder="Enter your name"
+                        multiline
+                        fullWidth
+                        size='large'
+                        margin='normal'
+                        variant='outlined'
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <AccountCircle />
+                                </InputAdornment>
+                            ),
+                        }}
+                        onChange={handleInputChange}
+                    />
+                    <TextField
+                        id="bio-input"
+                        label="Bio"
+                        value={userProfile?.bio}
+                        name='bio'
+                        placeholder="Enter a bio"
+                        multiline
+                        fullWidth
+                        size='large'
+                        margin='normal'
+                        variant='outlined'
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <InfoIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                        onChange={handleInputChange}
+                    />
+                    <div class='birthdayPicker'>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <DatePicker
+                                id="birthday-input"
+                                label="Enter your birthday"
+                                name="birthday"
+                                fullWidth
+                                margin='normal'
+                                size='large'
+                                value={userProfile?.birthday}
+                                onChange={async (newValue) => {
+                                    const updateRef = doc(db, 'profile', props.uid);
+                                    await updateDoc(updateRef, {
+                                        birthday: String(newValue._d).substring(4, 15)
+                                    });
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                    </div>
 
-                <ImageUploading
-                    value={images}
-                    onChange={onChange}
-                    maxNumber={maxNumber}
-                    dataURLKey="data_url"
-                    acceptType={["jpg", "png"]}
-                >
-                    {({
-                        imageList,
-                        onImageUpload,
-                        onImageRemoveAll,
-                        onImageUpdate,
-                        onImageRemove,
-                        isDragging,
-                        dragProps
-                    }) => (
-                        // write your building UI
-                        <div className="upload__image-wrapper">
-                            <Button startIcon={<InsertPhotoIcon />} variant='outlined' style={isDragging ? { color: "red" } : null}
-                                onClick={onImageUpload}
-                                {...dragProps}
-                            >
-                                Click or Drop profile picture here</Button>
-                            &nbsp;
-                            {imageList.map((image, index) => (
-                                <div key={index} className="image-item">
-                                    <img src={image.data_url} alt="" width="100" />
-                                    <div className="image-item__btn-wrapper">
-                                        <Button variant='outlined' onClick={uploadProfilePic}>Update profile picture</Button>
-                                        <Button variant='outlined' onClick={() => onImageRemove(index)}>Remove</Button>
+                    <ImageUploading
+                        value={images}
+                        onChange={onChange}
+                        maxNumber={maxNumber}
+                        dataURLKey="data_url"
+                        acceptType={["jpg", "png"]}
+                    >
+                        {({
+                            imageList,
+                            onImageUpload,
+                            onImageRemoveAll,
+                            onImageUpdate,
+                            onImageRemove,
+                            isDragging,
+                            dragProps
+                        }) => (
+                            // write your building UI
+                            <div className="upload__image-wrapper">
+                                <Button startIcon={<InsertPhotoIcon />} variant='outlined' style={isDragging ? { color: "red" } : null}
+                                    onClick={onImageUpload}
+                                    {...dragProps}
+                                >
+                                    Click or Drop profile picture here</Button>
+                                &nbsp;
+                                {imageList.map((image, index) => (
+                                    <div key={index} className="image-item">
+                                        <img src={image.data_url} alt="" width="100" />
+                                        <div className="image-item__btn-wrapper">
+                                            <Button variant='outlined' onClick={uploadProfilePic}>Update profile picture</Button>
+                                            <Button variant='outlined' onClick={() => onImageRemove(index)}>Remove</Button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </ImageUploading>
+                                ))}
+                            </div>
+                        )}
+                    </ImageUploading>
 
-                <div className='signOutButton'>
-                    <Button variant='outlined' startIcon={<AccountCircle />} color='error' onClick={signOutAcc} >Sign Out</Button>
+
+                    <div className='signOutButton'>
+                        <Button variant='outlined' startIcon={<AccountCircle />} color='error' onClick={signOutAcc} >Sign Out</Button>
+                    </div>
                 </div>
             </div>
         </>

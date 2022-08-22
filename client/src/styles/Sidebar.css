@@ -55,3 +55,9 @@
 span {
     margin-left: 16px
 }
+.sideBarLink {
+    color:#1d84f4;;
+}
+.sideBarLink:visited {
+    color:#1d84f4;;
+}

@@ -12,10 +12,20 @@
 .signInText {
     text-align:center;
     margin-bottom: 1%;
+    font-family:'Courier New', Courier, monospace;
 }
 
 .signUpButton {
     margin: 0 auto;
     display: block;
     text-align:center;
+}
+
+.imageContainer {
+    text-align: center;
+}
+
+.signInContainer {
+    background-color: #fff4a4;
+    height: 100vh;
 }

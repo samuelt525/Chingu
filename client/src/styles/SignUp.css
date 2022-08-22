@@ -6,7 +6,7 @@
 
 .signUpText {
     text-align: center;
-    margin-top:3%;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .MuiButtonBase-root {
@@ -16,4 +16,9 @@
 
 .signInButton {
     text-align: center;
+}
+
+.signUpContainer {
+    background-color: #fff4a4;
+    height: 100vh;
 }

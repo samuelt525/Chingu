@@ -11,9 +11,9 @@ export default function Home() {
                     <img src={ChingLogo} height={512} width={512}/>
                 </div>
                 <div className='textContainer'>
-                    <h1 style={{color: '#e00000'}}>Welcome to Ching</h1>   
-                    <h2 style={{color: '#e00000'}}>A place where Asian Americans can communicate </h2>
-                    <h3 style={{color: '#e00000'}}>Supporting Mobile, Web, and Desktop Application! </h3>
+                    <h1 style={{color: '#e00000', textAlign: 'center'}}>Welcome to Ching</h1>   
+                    <h2 style={{color: '#e00000', textAlign: 'center'}}>A place where Asian Americans can communicate </h2>
+                    <h3 style={{color: '#e00000', textAlign: 'center'}}>Supporting Mobile, Web, and Desktop Application! </h3>
                 </div>
 
             </div>

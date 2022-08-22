@@ -66,25 +66,27 @@ export default function Friends(props) {
 
     return (
         <>
-            <NewSideBar />
-            <div className='addFriend'>
-                <form onSubmit={addFriend}>
-                    <TextField
-                        name="friendSearch"
-                        label="Add a Friend"
-                        placeholder="Enter Email Address"
-                        type="text"
-                        margin='normal'
-                        value={searchValue}
-                        onChange={handleInputChange}
-                    />
-                    <Button variant='outlined' startIcon={<AccountCircle />} type='submit' className='addFriendButton'>Add a friend</Button>
-                </form>
-            </div>
-            <h1 className='pageTitle'>Friends</h1>
-            <div className="friendsListBodyContainer">
-                <div className="friendsListBlock">
-                    {FriendsBox()}
+            <div className='friendsContainer'>
+                <NewSideBar />
+                <div className='addFriend'>
+                    <form onSubmit={addFriend}>
+                        <TextField
+                            name="friendSearch"
+                            label="Add a Friend"
+                            placeholder="Enter Email Address"
+                            type="text"
+                            margin='normal'
+                            value={searchValue}
+                            onChange={handleInputChange}
+                        />
+                        <Button variant='outlined' startIcon={<AccountCircle />} type='submit' className='addFriendButton'>Add a friend</Button>
+                    </form>
+                </div>
+                <h1 className='pageTitle'>Friends</h1>
+                <div className="friendsListBodyContainer">
+                    <div className="friendsListBlock">
+                        {FriendsBox()}
+                    </div>
                 </div>
             </div>
         </>
