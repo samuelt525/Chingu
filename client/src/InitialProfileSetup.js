@@ -40,8 +40,7 @@ function InitialProfileSetup() {
         name: "",
         birthday: "",
         profilePic: "",
-        bio: "",
-        profilePic: ""
+        bio: ""
     };
     const [formValues, setFormValues] = useState(defaultValues);
     const handleInputChange = (e) => {
@@ -67,7 +66,8 @@ function InitialProfileSetup() {
                     bio: formValues.bio,
                     userID: uid,
                     email: auth.currentUser.email,
-                    friends: []
+                    friends: [],
+                    profilePic: formValues.profilePic
                 }, { merge: true });
                 sessionStorage.setItem('profileSetUp', '1');
                 window.location.reload(false);
@@ -95,14 +95,12 @@ function InitialProfileSetup() {
     const uploadProfilePic = async (event) => {
         event.preventDefault();
         const profilePicsRef = ref(storage, uid + '-profile-pic');
-        uploadBytes(profilePicsRef, images[0].file).then((snapshot) => {
+        await uploadBytes(profilePicsRef, images[0].file).then((snapshot) => {
             console.log('Uploaded a Picture successfully!');
         });
         getDownloadURL(profilePicsRef).then(async (url) => {
-            const updateRef = doc(db, 'profile', uid);
-            await setDoc(updateRef, {
-                profilePic: url
-            });
+            formValues.profilePic = url;
+            console.log(formValues);
         });
     }
 
