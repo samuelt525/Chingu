@@ -9,7 +9,7 @@ import 'firebase/auth';
 import * as firebase from 'firebase/app';
 import { updateDoc, setDoc, doc, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
+import ChingLogo from './Ching-logos/Ching-logos_black_cropped.png'
 import { TextField } from '@mui/material';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
@@ -94,7 +94,7 @@ function InitialProfileSetup() {
 
     const uploadProfilePic = async (event) => {
         event.preventDefault();
-        const profilePicsRef = ref(storage, uid+'-profile-pic');
+        const profilePicsRef = ref(storage, uid + '-profile-pic');
         uploadBytes(profilePicsRef, images[0].file).then((snapshot) => {
             console.log('Uploaded a Picture successfully!');
         });
@@ -109,93 +109,97 @@ function InitialProfileSetup() {
     const [value, setValue] = React.useState(null);
     return (
         <>
-            <h1 className='welcome'>Welcome to Ching!</h1>
-            <h2 className='directions'>Enter your information below:</h2>
-            <Avatar src={formValues.profilePic}></Avatar>
-            <div className='formContainer'>
-                <form onSubmit={handleSubmit}>
-                    <TextField
-                        id="name-input"
-                        name="name"
-                        label="Enter your name"
-                        type="text"
-                        fullWidth
-                        margin='normal'
-                        value={formValues.name}
-                        onChange={handleInputChange}
-                    />
-                    <TextField
-                        id="bio-input"
-                        name="bio"
-                        label="Enter a bio"
-                        type="text"
-                        fullWidth
-                        margin='normal'
-                        value={formValues.bio}
-                        onChange={handleInputChange}
-                    />
-                    <br />
-                    <br />
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <DatePicker
-                            id="birthday-input"
-                            label="Enter your birthday"
-                            name="birthday"
-                            value={value}
+            <div className="initialProfileSetupContainer">
+                <div className='imageContainer'>
+                    <img src={ChingLogo} height={250} width={600} />
+                </div>
+                <h1 className='welcome'>Welcome to Ching!</h1>
+                <h2 className='directions'>Enter your information below:</h2>
+                <div className='formContainer'>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            id="name-input"
+                            name="name"
+                            label="Enter your name"
+                            type="text"
                             fullWidth
                             margin='normal'
-                            onChange={(newValue) => {
-                                setValue(newValue);
-                                formValues.birthday = String(newValue._d).substring(4, 15);
-                                console.log(formValues.birthday);
-                            }}
-                            renderInput={(params) => <TextField {...params} />}
+                            value={formValues.name}
+                            onChange={handleInputChange}
                         />
-                    </LocalizationProvider>
-                    <br />
-                    <br />
-                    <ImageUploading
-                        value={images}
-                        onChange={onChange}
-                        maxNumber={maxNumber}
-                        dataURLKey="data_url"
-                        acceptType={["jpg", "png"]}
-                    >
-                        {({
-                            imageList,
-                            onImageUpload,
-                            onImageRemoveAll,
-                            onImageUpdate,
-                            onImageRemove,
-                            isDragging,
-                            dragProps
-                        }) => (
-                            // write your building UI
-                            <div className="upload__image-wrapper">
-                                <Button startIcon={<InsertPhotoIcon />} variant='outlined' style={isDragging ? { color: "red" } : null}
-                                    onClick={onImageUpload}
-                                    {...dragProps}
-                                >
-                                    Click or Drop profile picture here</Button>
-                                &nbsp;
-                                {imageList.map((image, index) => (
-                                    <div key={index} className="image-item">
-                                        <img src={image.data_url} alt="" width="100" />
-                                        <div className="image-item__btn-wrapper">
-                                            <Button variant='outlined' onClick={uploadProfilePic}>Update profile picture</Button>
-                                            <Button variant='outlined' onClick={() => onImageRemove(index)}>Remove</Button>
+                        <TextField
+                            id="bio-input"
+                            name="bio"
+                            label="Enter a bio"
+                            type="text"
+                            fullWidth
+                            margin='normal'
+                            value={formValues.bio}
+                            onChange={handleInputChange}
+                        />
+                        <br />
+                        <br />
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <DatePicker
+                                id="birthday-input"
+                                label="Enter your birthday"
+                                name="birthday"
+                                value={value}
+                                fullWidth
+                                margin='normal'
+                                onChange={(newValue) => {
+                                    setValue(newValue);
+                                    formValues.birthday = String(newValue._d).substring(4, 15);
+                                    console.log(formValues.birthday);
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                        <br />
+                        <br />
+                        <ImageUploading
+                            value={images}
+                            onChange={onChange}
+                            maxNumber={maxNumber}
+                            dataURLKey="data_url"
+                            acceptType={["jpg", "png"]}
+                        >
+                            {({
+                                imageList,
+                                onImageUpload,
+                                onImageRemoveAll,
+                                onImageUpdate,
+                                onImageRemove,
+                                isDragging,
+                                dragProps
+                            }) => (
+                                // write your building UI
+                                <div className="upload__image-wrapper">
+                                    <Button startIcon={<InsertPhotoIcon />} variant='outlined' style={isDragging ? { color: "red" } : null}
+                                        onClick={onImageUpload}
+                                        {...dragProps}
+                                    >
+                                        Click or Drop profile picture here</Button>
+                                    &nbsp;
+                                    {imageList.map((image, index) => (
+                                        <div key={index} className="image-item">
+                                            <img src={image.data_url} alt="" width="100" />
+                                            <div className="image-item__btn-wrapper">
+                                                <Button variant='outlined' onClick={uploadProfilePic}>Update profile picture</Button>
+                                                <Button variant='outlined' onClick={() => onImageRemove(index)}>Remove</Button>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </ImageUploading>
-                    <Button variant="contained" color="primary" type="submit">
-                        Submit
-                    </Button>
-                </form>
+                                    ))}
+                                </div>
+                            )}
+                        </ImageUploading>
+                        <Button variant="contained" color="primary" type="submit">
+                            Submit
+                        </Button>
+                    </form>
+                </div>
+                {error}
             </div>
-            {error}
         </>
     )
 }
