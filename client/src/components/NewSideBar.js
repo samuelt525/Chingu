@@ -42,8 +42,8 @@ function NewSideBar() {
     return (
         <>
             <div className="sidebar">
-                <IconButton  onClick={showSidebar} size='large' edge='start' color='inherit' aria-label='logo'>
-                    <FAIcons.FaBars/>
+                <IconButton style={{ marginLeft: 10 }} onClick={showSidebar} size='large' edge='start' color='inherit' aria-label='logo'>
+                    <FAIcons.FaBars />
                 </IconButton>
                 <div className='logoContainer'>
                     <Link to="/" className='link' height={100}>
